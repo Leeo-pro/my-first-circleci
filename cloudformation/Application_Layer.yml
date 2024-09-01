@@ -84,7 +84,7 @@ Resources:
       StorageType: gp2
       BackupRetentionPeriod: 1
       MasterUsername: admin
-      MasterUserPassword: !Ref DBPassword
+      MasterUserPassword: "{{resolve:ssm-secure:/myapp/dbpassword}}"
       DBInstanceIdentifier: !Ref DBInstanceIdentifier
       DBName: SampleRDS
       AvailabilityZone:
