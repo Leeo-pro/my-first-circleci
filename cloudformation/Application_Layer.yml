@@ -32,10 +32,8 @@ Parameters:
     Default: key202408
 
   DBPassword:
-    NoEcho: true
-    Type: String
-    MinLength: 8
-    MaxLength: 41
+    Type: AWS::SSM::Parameter::Value<SecureString>
+    Default: /myapp/dbpassword
 
 Resources:
   # KMSキーの作成
@@ -89,7 +87,10 @@ Resources:
       MasterUserPassword: !Ref DBPassword
       DBInstanceIdentifier: !Ref DBInstanceIdentifier
       DBName: SampleRDS
-      AvailabilityZone: ap-northeast-1a
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: !Ref "AWS::Region"
       Engine: mysql
       EngineVersion: 8.0.35
       DBSubnetGroupName: !Ref SampleRDSSubnetgroup
@@ -177,7 +178,6 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: sample-s3-202408
-      AccessControl: Private
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
@@ -190,6 +190,20 @@ Resources:
         RestrictPublicBuckets: True
       VersioningConfiguration:
         Status: Suspended
+
+  # S3バケットポリシーの指定
+  SampleS3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref SampleS3Bucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - s3:GetObject
+            Resource: !Sub "arn:aws:s3:::${SampleS3Bucket}/*"
+            Principal: "*"
 
   # IAMロールの指定
   S3AccessRole:

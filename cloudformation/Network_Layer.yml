@@ -19,7 +19,10 @@ Resources:
       VpcId: !Ref SampleVPC
       CidrBlock: 10.0.0.0/24
       MapPublicIpOnLaunch: true
-      AvailabilityZone: ap-northeast-1a
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: !Ref "AWS::Region"
       Tags:
       - Key: Name
         Value: PublicSubnet1a
@@ -29,7 +32,10 @@ Resources:
     Properties:
       VpcId: !Ref SampleVPC
       CidrBlock: 10.0.1.0/24
-      AvailabilityZone: ap-northeast-1a
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: !Ref "AWS::Region"
       Tags:
       - Key: Name
         Value: PrivateSubnet1a
@@ -40,7 +46,10 @@ Resources:
       VpcId: !Ref SampleVPC
       CidrBlock: 10.0.3.0/24
       MapPublicIpOnLaunch: true
-      AvailabilityZone: ap-northeast-1c
+      AvailabilityZone:
+        Fn::Select:
+          - 1
+          - Fn::GetAZs: !Ref "AWS::Region"
       Tags:
       - Key: Name
         Value: PublicSubnet1c
@@ -50,7 +59,10 @@ Resources:
     Properties:
       VpcId: !Ref SampleVPC
       CidrBlock: 10.0.2.0/24
-      AvailabilityZone: ap-northeast-1c
+      AvailabilityZone:
+        Fn::Select:
+          - 1
+          - Fn::GetAZs: !Ref "AWS::Region"
       Tags:
       - Key: Name
         Value: PrivateSubnet1c
