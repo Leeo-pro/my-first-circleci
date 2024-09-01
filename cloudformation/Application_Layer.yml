@@ -31,10 +31,6 @@ Parameters:
     Type: String
     Default: key202408
 
-  DBPassword:
-    Type: AWS::SSM::Parameter::Value<SecureString>
-    Default: /myapp/dbpassword
-
 Resources:
   # KMSキーの作成
   MyKMSKey:
