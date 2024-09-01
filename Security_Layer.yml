@@ -1,0 +1,74 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Security_Layer Template
+
+Parameters:
+  MyCidrIp:
+    NoEcho: true
+    Type: String
+    Description: Enter the CIDR IP for the security group ingress rule
+
+Resources:
+  SecurityGroupEC2:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: SecurityGroupEC2
+      GroupName: SecurityGroupEC2
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          SourceSecurityGroupId: !Ref SecurityGroupALB
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Ref MyCidrIp
+      Tags:
+        - Key: Name
+          Value: SecurityGroupEC2
+      VpcId: !ImportValue SampleVPCId-NetworkLayer
+
+  SecurityGroupRDS:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: SecurityGroupRDS
+      GroupName: SecurityGroupRDS
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          SourceSecurityGroupId: !Ref SecurityGroupEC2
+      Tags:
+        - Key: Name
+          Value: SecurityGroupRDS
+      VpcId: !ImportValue SampleVPCId-NetworkLayer
+
+  SecurityGroupALB:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: SecurityGroupALB
+      GroupName: SecurityGroupALB
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: SecurityGroupALB
+      VpcId: !ImportValue SampleVPCId-NetworkLayer
+
+Outputs:
+  SecurityGroupEC2:
+    Value: !Ref SecurityGroupEC2
+    Export:
+      Name: SecurityGroupEC2Id-SecurityLayer
+
+  SecurityGroupRDS:
+    Value: !Ref SecurityGroupRDS
+    Export:
+      Name: SecurityGroupRDSId-SecurityLayer
+
+  SecurityGroupALB:
+    Value: !Ref SecurityGroupALB
+    Export:
+      Name: SecurityGroupALBId-SecurityLayer
