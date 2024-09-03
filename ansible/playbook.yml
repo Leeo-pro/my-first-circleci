@@ -1,0 +1,5 @@
+- hosts: localhost
+  tasks:
+    - name: Print a message
+      debug:
+        msg: "Ansible playbook is running!"
