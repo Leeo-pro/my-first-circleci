@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   python: circleci/python@2.0.3
   aws-cli: circleci/aws-cli@1.3.0
-  ansible: circleci/ansible@2.0.3
+  ansible: orbss/ansible-playbook@0.0.5
 jobs:
   cfn-lint:
     executor: python/default
@@ -55,6 +55,7 @@ jobs:
           command: rake spec
 
 workflows:
+  version: 2
   raisetech:
     jobs:
       - cfn-lint
