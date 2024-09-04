@@ -34,13 +34,11 @@ jobs:
 
   ansible:
     docker:
-      - image: circleci/ansible:latest
+      - image: circleci/python:3.7
     steps:
       - checkout
-      - ansible/install
-      - run:
-          name: Run Ansible Playbook
-          command: ansible-playbook ansible/playbook.yml
+      - ansible-playbook/run:
+          playbook: ansible/playbook.yml
 
   serverspec:
     docker:
