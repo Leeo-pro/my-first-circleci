@@ -23,7 +23,7 @@ jobs:
           profile-name: default
           aws-access-key-id: $AWS_ACCESS_KEY_ID
           aws-secret-access-key: $AWS_SECRET_ACCESS_KEY
-          aws-region: "us-west-2"
+          aws-region: "ap-northeast-1"
       - run:
           name: Deploy CloudFormation Stack
           command: |
