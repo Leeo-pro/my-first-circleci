@@ -37,9 +37,9 @@ jobs:
       - image: circleci/python:3.7
     steps:
       - checkout
-      - ansible-playbook/run:
-          playbook: ansible/playbook.yml
-          inventory: ansible/inventory.ini
+      - run:
+          name: Run Ansible Playbook
+          command: ansible-playbook ansible/playbook.yml -i ansible/inventory.ini
 
   serverspec:
     docker:
