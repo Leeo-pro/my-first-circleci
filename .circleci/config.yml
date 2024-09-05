@@ -15,12 +15,10 @@ jobs:
             cfn-lint -i W3002 -t cloudformation/*.yml
 
   cloudformation:
-    docker:
-      - image: circleci/aws-cli:latest
+    executor: aws-cli/default
     steps:
       - checkout
       - aws-cli/setup:
-          profile-name: default
           aws-access-key-id: AWS_ACCESS_KEY_ID
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
           aws-region: AWS_REGION
