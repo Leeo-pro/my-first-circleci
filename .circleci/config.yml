@@ -39,6 +39,7 @@ jobs:
       - checkout
       - ansible-playbook/run:
           playbook: ansible/playbook.yml
+          inventory: ansible/inventory.ini
 
   serverspec:
     docker:
