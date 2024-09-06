@@ -63,7 +63,7 @@ Resources:
             - !ImportValue SecurityGroupEC2Id-SecurityLayer
           DeviceIndex: 0
       InstanceType: !Ref InstanceType
-      ImageId: ami-0af1df87db7b650f4
+      ImageId: ami-058032fea80b4687c
       IamInstanceProfile:
         !Ref S3AccessInstanceProfile
       KeyName: !Ref KeyPairName
