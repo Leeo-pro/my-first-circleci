@@ -23,11 +23,13 @@ jobs:
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
           aws-region: AWS_REGION
       - run:
-          name: Deploy CloudFormation Stack2
+          name: Deploy CloudFormation Stack
           command: |
+            # 実行時にIPを設定
+            MY_CIDR_IP=$(curl -s http://checkip.amazonaws.com)/32
             set -x
             aws cloudformation deploy --template-file cloudformation/Network_Layer.yml --stack-name network
-            aws cloudformation deploy --template-file cloudformation/Security_Layer.yml --stack-name security
+            aws cloudformation deploy --template-file cloudformation/Security_Layer.yml --stack-name security --parameter-overrides MyCidrIp=$MY_CIDR_IP
             aws cloudformation deploy --template-file cloudformation/Application_Layer.yml --stack-name application --capabilities CAPABILITY_NAMED_IAM
 
   ansible:
