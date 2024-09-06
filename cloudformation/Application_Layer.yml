@@ -173,7 +173,7 @@ Resources:
   SampleS3Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: sample-s3-202408
+      BucketName: sample-s3-202409
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
