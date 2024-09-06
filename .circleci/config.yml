@@ -25,7 +25,6 @@ jobs:
       - run:
           name: Deploy CloudFormation Stack
           command: |
-            # 実行時にIPを設定
             MY_CIDR_IP=$(curl -s http://checkip.amazonaws.com)/32
             set -x
             aws cloudformation deploy --template-file cloudformation/Network_Layer.yml --stack-name network
