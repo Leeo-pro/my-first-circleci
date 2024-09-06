@@ -200,8 +200,8 @@ Resources:
               - s3:GetObject
             Resource: !Sub "arn:aws:s3:::${SampleS3Bucket}/*"
             Principal:
-            AWS:
-              - !Sub "arn:aws:iam::${AWS::AccountId}:root"
+              AWS:
+                - !Sub "arn:aws:iam::${AWS::AccountId}:root"
 
   # IAMロールの指定
   S3AccessRole:
