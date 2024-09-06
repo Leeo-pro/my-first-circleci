@@ -23,7 +23,7 @@ jobs:
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
           aws-region: AWS_REGION
       - run:
-          name: Deploy CloudFormation Stack2
+          name: Deploy CloudFormation Stack
           command: |
             set -x
             aws cloudformation deploy --template-file cloudformation/Application_Layer.yml --stack-name application --capabilities CAPABILITY_NAMED_IAM
