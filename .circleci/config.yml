@@ -23,7 +23,7 @@ jobs:
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
           aws-region: AWS_REGION
       - run:
-          name: Deploy CloudFormation Stack
+          name: Deploy CloudFormation Stack2
           command: |
             set -x
             aws cloudformation deploy --template-file cloudformation/Network_Layer.yml --stack-name network
