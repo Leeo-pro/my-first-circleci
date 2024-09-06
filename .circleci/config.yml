@@ -26,9 +26,9 @@ jobs:
           name: Deploy CloudFormation Stack
           command: |
             set -x
-            aws cloudformation deploy --template-file cloudformation/Application_Layer.yml --stack-name application --capabilities CAPABILITY_NAMED_IAM
             aws cloudformation deploy --template-file cloudformation/Network_Layer.yml --stack-name network
             aws cloudformation deploy --template-file cloudformation/Security_Layer.yml --stack-name security
+            aws cloudformation deploy --template-file cloudformation/Application_Layer.yml --stack-name application --capabilities CAPABILITY_NAMED_IAM
 
   ansible:
     docker:
