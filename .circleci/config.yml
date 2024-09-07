@@ -23,7 +23,7 @@ jobs:
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
           aws-region: AWS_REGION
       - run:
-          name: Deploy CloudFormation Stack
+          name: Deploy CloudFormation Stack2
           command: |
             MY_CIDR_IP=$(curl -s http://checkip.amazonaws.com)/32
             set -x
