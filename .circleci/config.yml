@@ -34,16 +34,16 @@ jobs:
   ansible:
     docker:
       - image: circleci/python:3.7
-  steps:
-    - checkout
-    - run:
-        name: Install Ansible
-        command: |
-          sudo apt-get update
-          sudo apt-get install -y ansible
-    - run:
-        name: Run Ansible Playbook
-        command: ansible-playbook ansible/playbook.yml -i ansible/inventory.ini
+    steps:
+      - checkout
+      - run:
+          name: Install Ansible
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y ansible
+      - run:
+          name: Run Ansible Playbook
+          command: ansible-playbook ansible/playbook.yml -i ansible/inventory.ini
 
   serverspec:
     docker:
