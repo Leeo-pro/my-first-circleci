@@ -47,15 +47,23 @@ jobs:
 
   serverspec:
     docker:
-      - image: ruby:2.7
+      - image: cimg/ruby:2.7-node
     steps:
       - checkout
       - run:
-          name: Install Serverspec
-          command: gem install serverspec
+          name: Copy SSH Config
+          command: cp sshconfig/config ~/.ssh/
       - run:
-          name: Run Serverspec
-          command: rake spec
+          name: bundle install
+          command: |
+            cd serverspec
+            gem list -e rails
+            bundle install --path vendor/bundle
+      - run:
+          name: execute
+          command: |
+            cd serverspec
+            bundle exec rake spec
 
 workflows:
   version: 2
