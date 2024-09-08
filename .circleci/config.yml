@@ -51,6 +51,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Create .ssh directory if it doesn't exist
+          command: mkdir -p ~/.ssh
+      - run:
           name: Copy SSH Config
           command: cp sshconfig/config ~/.ssh/
       - run:
