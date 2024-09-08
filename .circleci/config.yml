@@ -57,6 +57,9 @@ jobs:
           name: Copy SSH Config
           command: cp sshconfig/config ~/.ssh/
       - run:
+          name: List directory to debug
+          command: ls -la
+      - run:
           name: bundle install
           command: |
             cd serverspec
