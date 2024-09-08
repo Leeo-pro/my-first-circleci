@@ -1,0 +1,6 @@
+Host cfn-lecture-ec2
+  HostName 15.168.136.26
+  Port 22
+  User ec2-user
+  StrictHostKeyChecking no
+  # IdentityFile KEY_FINGERPRINT_WEB
