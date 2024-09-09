@@ -1,3 +1,4 @@
+puts "spec_helper loaded" if defined?(RSpec)
 require_relative '../spec_helper'
 
 listen_port = 80
