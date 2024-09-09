@@ -80,6 +80,11 @@ jobs:
             cd serverspec
             bundle install
       - run:
+          name: Initialize Serverspec
+          command: |
+            cd serverspec
+            bundle exec serverspec-init
+      - run:
           name: execute
           command: |
             cd serverspec
