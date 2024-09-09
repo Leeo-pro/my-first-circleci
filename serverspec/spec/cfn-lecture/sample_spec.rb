@@ -24,6 +24,6 @@ describe port(listen_port) do
 end
 
 # 指定したポートでのcurlコマンドのテスト
-describe command('curl http://127.0.0.1:#{listen_port}/_plugin/head/ -o /dev/null -w "%{http_code}\n" -s') do
+describe command("curl http://127.0.0.1:#{listen_port}/_plugin/head/ -o /dev/null -w "%{http_code}\n" -s") do
   its(:stdout) { should match /^200$/ }
 end
