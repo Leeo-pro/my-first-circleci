@@ -5,7 +5,7 @@ listen_port = 80
 # 想定通りの AMI が使用されているか
 # 必要なパッケージが必要なバージョンでインストールされている担保が取れるため
 describe command('curl http://169.254.169.254/latest/meta-data/ami-id') do
-  its(:stdout) { should match /ami-04ff98ccbfa41c9ad/ }
+  its(:stdout) { should match /ami-058032fea80b4687c/ }
 end
 
 # nginxが実行中であるか
