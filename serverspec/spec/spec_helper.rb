@@ -1,4 +1,5 @@
 require 'serverspec'
+require 'rspec'
 
 # サーバーのタイプを設定 (ローカルでテストする場合)
 set :backend, :exec
