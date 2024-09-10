@@ -4,23 +4,15 @@ require 'rspec'
 # サーバーのタイプを設定 (ローカルでテストする場合)
 set :backend, :ssh
 
-# RSpec の設定
-RSpec.configure do |config|
-  # テスト結果の永続化 (不要であればコメントアウト)
-  config.example_status_persistence_file_path = "spec/examples.txt"
+# 環境変数から値を取得
+host = ENV['TARGET_HOST'] # CircleCIで設定したリモートサーバーのIPアドレス
+user = ENV['SSH_USER']    # SSHユーザー名
+private_key = ENV['SSH_PRIVATE_KEY'] # 秘密鍵
 
-  # 推奨される非モンキーパッチング構文を使用
-  config.disable_monkey_patching!
+# SSH接続設定
+options = Net::SSH::Config.for(host)
+options[:user] = user
+options[:keys] = [private_key] # 秘密鍵を設定
 
-  # 単一のファイルを実行する場合にドキュメント形式で出力
-  if config.files_to_run.one?
-    config.default_formatter = "doc"
-  end
-
-  # 最も遅い 10 のテストを表示 (不要であればコメントアウト)
-  config.profile_examples = 10
-
-  # テストの実行順序をランダム化
-  config.order = :random
-  Kernel.srand config.seed
-end
+set :host, host
+set :ssh_options, options
