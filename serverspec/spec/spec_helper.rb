@@ -2,7 +2,7 @@ require 'serverspec'
 require 'rspec'
 
 # サーバーのタイプを設定 (ローカルでテストする場合)
-set :backend, :exec
+set :backend, :ssh
 
 # RSpec の設定
 RSpec.configure do |config|
