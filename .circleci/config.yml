@@ -60,9 +60,10 @@ jobs:
           name: List directory to debug
           command: ls -la
       - run:
-          name: Check if port 22 is open on the target server
+          name: Check if Port 22 is Open on EC2 instance
           command: |
-            nc -zv target_server_ip_or_hostname 22 || exit 1
+            echo "Public IP: $TARGET_HOST"
+            nc -zv $TARGET_HOST 22 || exit 1
       - run:
           name: Check for Gemfile
           command: |
