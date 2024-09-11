@@ -57,7 +57,7 @@ jobs:
           name: Copy SSH Config
           command: cp sshconfig/config ~/.ssh/
       - run:
-          name: List directory to debug2
+          name: List directory to debug
           command: ls -la
       - run:
           name: Check if Port 22 is Open on EC2 instance
