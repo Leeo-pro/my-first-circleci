@@ -60,6 +60,10 @@ jobs:
           name: List directory to debug
           command: ls -la
       - run:
+          name: Check if port 22 is open on the target server
+          command: |
+            nc -zv target_server_ip_or_hostname 22 || exit 1
+      - run:
           name: Check for Gemfile
           command: |
             if [ ! -f serverspec/Gemfile ]; then
