@@ -3,3 +3,12 @@
     - name: Print a message
       debug:
         msg: "Ansible playbook is running!"
+
+    - name: Update APT package index (Ubuntu/Debian)
+      apt:
+        update_cache: yes
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present

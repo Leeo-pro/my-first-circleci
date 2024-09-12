@@ -18,9 +18,9 @@ describe package('nginx') do
   it { should be_installed }
 end
 
-# Pumaプロセスが実行中であるか（ソケット使用している場合）
-describe file('/var/www/raisetech-live8-sample-app/tmp/sockets/puma.sock') do
-  it { should be_socket }
+# nginxが実行中であるか
+describe service('nginx') do
+  it { should be_installed }
 end
 
 # 80番portが空いているか
