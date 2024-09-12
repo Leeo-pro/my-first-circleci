@@ -85,7 +85,7 @@ jobs:
             cd serverspec
             bundle config set --local path 'vendor/bundle'
       - run:
-          name: bundle install
+          name: bundle install2
           command: |
             cd serverspec
             bundle install
