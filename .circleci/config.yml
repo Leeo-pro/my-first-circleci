@@ -23,6 +23,11 @@ jobs:
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
           aws-region: AWS_REGION
       - run:
+          name: Check CircleCI IP Address
+          command: |
+            echo "Current CircleCI IP Address:"
+            curl ifconfig.me
+      - run:
           name: Deploy CloudFormation Stack
           command: |
             MY_CIDR_IP=$(curl -s http://checkip.amazonaws.com)/32
