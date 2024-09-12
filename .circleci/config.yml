@@ -68,7 +68,7 @@ jobs:
           name: Check if Port 22 is Open on EC2 instance
           command: |
             echo "Public IP: $TARGET_HOST"
-            nc -zv $TARGET_HOST 22 || exit 1
+            telnet $TARGET_HOST 22 || exit 1
       - run:
           name: Check for Gemfile
           command: |
