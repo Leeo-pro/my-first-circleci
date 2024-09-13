@@ -60,7 +60,7 @@ jobs:
       - run:
           name: Run Ansible Playbook
           command: |
-            ansible-playbook -i ansible/inventory.ini ansible/playbook.yml
+            ansible-playbook -i ansible/inventory.ini ansible/playbook.yml -vvv
 
   serverspec:
     docker:
