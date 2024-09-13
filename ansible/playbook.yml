@@ -1,4 +1,4 @@
-- hosts: localhost
+- hosts: webserver
   become: yes  # 管理者権限で実行するための設定
   tasks:
     - name: Print a message
