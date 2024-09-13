@@ -53,6 +53,11 @@ jobs:
             echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
             chmod 600 ~/.ssh/id_rsa
       - run:
+          name: Check SSH Key Permissions
+          command: |
+            ls -la ~/.ssh/id_rsa
+            cat ~/.ssh/id_rsa
+      - run:
           name: Create Dynamic Inventory File
           command: |
             echo "[webserver]" > ansible/inventory.ini
@@ -60,6 +65,10 @@ jobs:
       - run:
           name: Display Inventory File
           command: cat ansible/inventory.ini
+      - run:
+          name: Test SSH Connection
+          command: |
+            ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $SSH_USER@$TARGET_HOST 'echo "SSH Connection Successful!"'
       - run:
           name: Run Ansible Playbook
           command: |
