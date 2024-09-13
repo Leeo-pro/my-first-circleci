@@ -58,6 +58,9 @@ jobs:
             echo "[webserver]" > ansible/inventory.ini
             echo "webserver ansible_host=$TARGET_HOST ansible_user=$SSH_USER ansible_ssh_private_key_file=~/.ssh/id_rsa" >> ansible/inventory.ini
       - run:
+          name: Display Inventory File
+          command: cat ansible/inventory.ini
+      - run:
           name: Run Ansible Playbook
           command: |
             ansible-playbook -i ansible/inventory.ini ansible/playbook.yml -vvv
