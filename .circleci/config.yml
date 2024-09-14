@@ -38,7 +38,7 @@ jobs:
 
   ansible:
     docker:
-      - image: circleci/python:3.7
+      - image: cimg/python:3.7
     steps:
       - checkout
       - run:
@@ -53,7 +53,7 @@ jobs:
             echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
             chmod 600 ~/.ssh/id_rsa
       - run:
-          name: Check SSH Key Permissions1
+          name: Check SSH Key Permissions
           command: |
             ls -la ~/.ssh/id_rsa
             cat ~/.ssh/id_rsa
