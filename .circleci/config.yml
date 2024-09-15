@@ -47,6 +47,16 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y ansible
       - run:
+          name: Update Security Group with Current IP
+          command: |
+            MY_CIDR_IP=$(curl -s http://checkip.amazonaws.com)/32
+            echo "Updating Security Group with IP: $MY_CIDR_IP"
+            aws ec2 authorize-security-group-ingress \
+              --group-id $SECURITY_GROUP_ID \
+              --protocol tcp \
+              --port 22 \
+              --cidr $MY_CIDR_IP
+      - run:
           name: Set up SSH Key
           command: |
             mkdir -p ~/.ssh
