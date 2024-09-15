@@ -87,12 +87,19 @@ jobs:
           name: Run Ansible Playbook
           command: |
             ansible-playbook -i ansible/inventory.ini ansible/playbook.yml -vvv
+      - run:
+          name: Verify Nginx is installed and running
+          command: |
+            nginx -v && systemctl status nginx
 
   serverspec:
     docker:
       - image: cimg/ruby:2.7-node
     steps:
       - checkout
+      - run:
+          name: Wait for Nginx to be fully up and running
+          command: sleep 10
       - run:
           name: Create .ssh directory if it doesn't exist
           command: mkdir -p ~/.ssh
