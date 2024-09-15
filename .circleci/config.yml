@@ -41,6 +41,10 @@ jobs:
       - image: cimg/python:3.7
     steps:
       - checkout
+      - aws-cli/setup:
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          aws-region: AWS_REGION
       - run:
           name: Install Ansible
           command: |
