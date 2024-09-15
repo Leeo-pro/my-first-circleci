@@ -51,6 +51,11 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y ansible
       - run:
+          name: Install Nginx (for verification)
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y nginx
+      - run:
           name: Update Security Group with Current IP
           command: |
             MY_CIDR_IP=$(curl -s http://checkip.amazonaws.com)/32

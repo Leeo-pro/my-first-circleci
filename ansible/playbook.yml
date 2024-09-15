@@ -27,6 +27,11 @@
     - name: Wait for Nginx to start
       command: sleep 10
 
+    - name: Check if Nginx is installed
+      command: which nginx
+      register: nginx_path
+      failed_when: nginx_path.stdout == ""
+
     - name: Check Nginx version
       command: nginx -v
       register: nginx_version
