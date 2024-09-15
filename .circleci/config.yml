@@ -106,7 +106,8 @@ jobs:
       - run:
           name: Verify Nginx is installed and running
           command: |
-            nginx -v && systemctl status nginx
+            nginx -v
+            ps aux | grep '[n]ginx'  # Check if nginx is running
 
   serverspec:
     docker:
