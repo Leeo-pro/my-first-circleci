@@ -96,6 +96,20 @@ jobs:
       - run:
           name: Create .ssh directory if it doesn't exist
           command: mkdir -p ~/.ssh
+      - aws-cli/setup:
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          aws-region: AWS_REGION
+      - run:
+          name: Update Security Group with Current IP
+          command: |
+            MY_CIDR_IP=$(curl -s http://checkip.amazonaws.com)/32
+            echo "Updating Security Group with IP: $MY_CIDR_IP"
+            aws ec2 authorize-security-group-ingress \
+              --group-id $SECURITY_GROUP_ID \
+              --protocol tcp \
+              --port 22 \
+              --cidr $MY_CIDR_IP
       - run:
           name: Copy SSH Config
           command: cp sshconfig/config ~/.ssh/
