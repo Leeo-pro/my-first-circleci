@@ -1,30 +1,37 @@
 - hosts: webservers
-  become: yes  # 管理者権限で実行するための設定
+  become: yes
   tasks:
     - name: Print a message
       debug:
         msg: "Ansible playbook is running!"
+
     - name: Update APT package index (Ubuntu/Debian)
       apt:
         update_cache: yes
+
     - name: Install Nginx
       apt:
         name: nginx
         state: present
+
     - name: Ensure Nginx is running
       service:
         name: nginx
         state: started
+
     - name: Ensure Nginx is enabled on boot
       service:
         name: nginx
         enabled: yes
+
     - name: Wait for Nginx to start
       command: sleep 10
+
     - name: Check Nginx version
       command: nginx -v
       register: nginx_version
       failed_when: "'command not found' in nginx_version.stderr"
+
     - name: Check Nginx status
       command: systemctl status nginx
       register: nginx_status
