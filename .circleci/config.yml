@@ -124,7 +124,7 @@ jobs:
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
           aws-region: AWS_REGION
       - run:
-          name: Update Security Group with Current IP
+          name: Update Security Group with Current IP2
           command: |
             MY_CIDR_IP=$(curl -s http://checkip.amazonaws.com)/32
             echo "Updating Security Group with IP: $MY_CIDR_IP"
