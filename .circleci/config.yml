@@ -60,11 +60,22 @@ jobs:
           command: |
             MY_CIDR_IP=$(curl -s http://checkip.amazonaws.com)/32
             echo "Updating Security Group with IP: $MY_CIDR_IP"
-            aws ec2 authorize-security-group-ingress \
-              --group-id $SECURITY_GROUP_ID \
-              --protocol tcp \
-              --port 22 \
-              --cidr $MY_CIDR_IP
+
+            # Check if the rule already exists
+            EXISTING_RULE=$(aws ec2 describe-security-groups \
+              --group-ids $SECURITY_GROUP_ID \
+              --query "SecurityGroups[0].IpPermissions[?FromPort==`22` && ToPort==`22` && IpRanges[?CidrIp=='$MY_CIDR_IP']]" \
+              --output text)
+
+            if [ -z "$EXISTING_RULE" ]; then
+              aws ec2 authorize-security-group-ingress \
+                --group-id $SECURITY_GROUP_ID \
+                --protocol tcp \
+                --port 22 \
+                --cidr $MY_CIDR_IP
+            else
+              echo "Rule already exists for IP: $MY_CIDR_IP"
+            fi
       - run:
           name: Set up SSH Key
           command: |
@@ -117,11 +128,22 @@ jobs:
           command: |
             MY_CIDR_IP=$(curl -s http://checkip.amazonaws.com)/32
             echo "Updating Security Group with IP: $MY_CIDR_IP"
-            aws ec2 authorize-security-group-ingress \
-              --group-id $SECURITY_GROUP_ID \
-              --protocol tcp \
-              --port 22 \
-              --cidr $MY_CIDR_IP
+
+            # Check if the rule already exists
+            EXISTING_RULE=$(aws ec2 describe-security-groups \
+              --group-ids $SECURITY_GROUP_ID \
+              --query "SecurityGroups[0].IpPermissions[?FromPort==`22` && ToPort==`22` && IpRanges[?CidrIp=='$MY_CIDR_IP']]" \
+              --output text)
+
+            if [ -z "$EXISTING_RULE" ]; then
+              aws ec2 authorize-security-group-ingress \
+                --group-id $SECURITY_GROUP_ID \
+                --protocol tcp \
+                --port 22 \
+                --cidr $MY_CIDR_IP
+            else
+              echo "Rule already exists for IP: $MY_CIDR_IP"
+            fi
       - run:
           name: Copy SSH Config
           command: cp sshconfig/config ~/.ssh/
