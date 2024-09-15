@@ -11,12 +11,6 @@
       apt:
         name: nginx
         state: present
-    - name: Check if Nginx is installed
-      command: nginx -v
-      ignore_errors: yes
-    - name: Install Nginx from apt
-      command: sudo apt-get install -y nginx
-      become: yes
     - name: Ensure Nginx is running
       service:
         name: nginx
@@ -27,5 +21,11 @@
         enabled: yes
     - name: Wait for Nginx to start
       command: sleep 10
+    - name: Check Nginx version
+      command: nginx -v
+      register: nginx_version
+      failed_when: "'command not found' in nginx_version.stderr"
     - name: Check Nginx status
       command: systemctl status nginx
+      register: nginx_status
+      failed_when: "'not found' in nginx_status.stderr"
