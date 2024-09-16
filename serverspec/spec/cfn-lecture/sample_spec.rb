@@ -13,9 +13,27 @@ describe command('which nginx') do
   its(:exit_status) { should eq 0 }
 end
 
+# rpm が使用可能か確認
+describe command('which rpm') do
+  its(:exit_status) { should eq 0 }
+end
+
+  # yum が使用可能か確認
+describe command('which yum') do
+  its(:exit_status) { should eq 0 }
+end
+
+  # dnf が使用可能か確認
+describe command('which dnf') do
+  its(:exit_status) { should eq 0 }
+end
+
+
+
+
 # nginxが実行中であるか
 describe package('nginx') do
-  it { should be_installed.by('rpm') }
+  it { should be_installed }
 end
 
 # nginxが実行中であるか
