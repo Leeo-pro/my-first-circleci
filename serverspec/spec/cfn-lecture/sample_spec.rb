@@ -1,13 +1,6 @@
 puts "spec_helper loaded" if defined?(RSpec)
 require 'spec_helper'
 
-RSpec.configure do |c|
-    c.before(:all) do
-      set :backend, :exec
-      set :path, '/sbin:/usr/sbin:/usr/local/sbin:$PATH'
-    end
-end
-
 listen_port = 80
 
 # 想定通りの AMI が使用されているか
@@ -17,7 +10,7 @@ describe command('curl http://169.254.169.254/latest/meta-data/ami-id') do
 end
 
 describe command('which nginx') do
-    its(:exit_status) { should eq 0 }
+  its(:exit_status) { should eq 0 }
 end
 
 # nginxが実行中であるか
