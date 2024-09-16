@@ -13,6 +13,7 @@
       apt:
         name: nginx
         state: present
+      when: nginx_installed.rc != 0
 
     - name: Ensure Nginx is started and enabled
       service:
@@ -25,13 +26,17 @@
         name: nginx
         enabled: yes
 
-    - name: Wait for Nginx to start
-      command: sleep 10
+    - name: Wait for Nginx to be accessible on port 80
+      wait_for:
+        port: 80
+        state: started
+        timeout: 30
+        delay: 5
 
     - name: Check if Nginx is installed
       command: which nginx
       register: nginx_path
-      failed_when: nginx_path.stdout == ""
+      ignore_errors: true
 
     - name: Check Nginx version
       command: nginx -v

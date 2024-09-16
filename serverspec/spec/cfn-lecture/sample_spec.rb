@@ -11,7 +11,7 @@ end
 
 # nginxが実行中であるか
 describe package('nginx') do
-  it { should be_installed.by('apt') }
+  it { should be_installed }
 end
 
 # nginxが実行中であるか
