@@ -9,6 +9,14 @@
       apt:
         update_cache: yes
 
+    - name: Enable Nginx in Amazon Linux Extras
+      command: amazon-linux-extras enable nginx1
+
+    - name: Install Nginx
+      yum:
+        name: nginx
+        state: present
+
     - name: Install Nginx
       package:
         name: nginx
