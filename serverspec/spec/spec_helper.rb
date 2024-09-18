@@ -3,7 +3,7 @@ require 'rspec'
 
 # サーバーのタイプを設定 (ローカルでテストする場合)
 set :backend, :ssh
-set :path, '/sbin:/usr/sbin:/usr/local/sbin:$PATH'
+set :path, '/usr/local/sbin:/usr/local/bin:/sbin:/usr/sbin:/bin:/usr/bin'
 
 # 環境変数から値を取得
 host = ENV['TARGET_HOST'] # CircleCIで設定したリモートサーバーのIPアドレス
