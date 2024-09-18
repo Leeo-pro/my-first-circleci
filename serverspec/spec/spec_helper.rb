@@ -1,9 +1,9 @@
 require 'serverspec'
 require 'rspec'
+require 'net/ssh'
 
 # サーバーのタイプを設定 (ローカルでテストする場合)
 set :backend, :ssh
-set :path, '/usr/local/sbin:/usr/local/bin:/sbin:/usr/sbin:/bin:/usr/bin'
 
 # 環境変数から値を取得
 host = ENV['TARGET_HOST'] # CircleCIで設定したリモートサーバーのIPアドレス
@@ -17,3 +17,4 @@ options[:keys] = [private_key] # 秘密鍵を設定
 
 set :host, host
 set :ssh_options, options
+set :path, '/sbin:/usr/sbin:/usr/local/sbin:$PATH' # パス設定
