@@ -9,11 +9,10 @@
       apt:
         update_cache: yes
 
-    - name: Install Nginx (Amazon Linux/CentOS)
-      yum:
+    - name: Install Nginx
+      package:
         name: nginx
         state: present
-      when: ansible_facts['os_family'] == 'RedHat'
 
     - name: Ensure Nginx is started and enabled
       service:
