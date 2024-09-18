@@ -12,15 +12,40 @@
     - name: Enable Nginx in Amazon Linux Extras
       command: amazon-linux-extras enable nginx1
 
+
+    - name: nginx install
+      become_user: root
+      shell: bash -lc "amazon-linux-extras install -y nginx1"
+      when: nginx_installed is failed
+
+
+
+
+    - name: start nginx service
+      become_user: root
+      service:
+        name: nginx
+        state: started
+      register: nginx_started
+
     - name: Install Nginx
       yum:
         name: nginx
         state: present
 
+
     - name: Install Nginx
       package:
         name: nginx
         state: present
+
+
+    - name: check nginx install
+      shell: bash -lc "nginx -v"
+      register: nginx_installed
+      changed_when: no
+      ignore_errors: yes
+
 
     - name: Ensure Nginx is started and enabled
       service:
