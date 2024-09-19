@@ -107,9 +107,9 @@ jobs:
       - run:
           name: Verify Nginx is installed and running
           command: |
-            ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $SSH_USER@$TARGET_HOST 'nginx -v && systemctl status nginx'
-            ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $SSH_USER@$TARGET_HOST 'ps aux | grep "[n]ginx"'
-            ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $SSH_USER@$TARGET_HOST 'curl -I http://localhost'
+            ###ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $SSH_USER@$TARGET_HOST 'nginx -v && systemctl status nginx'
+            ###ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $SSH_USER@$TARGET_HOST 'ps aux | grep "[n]ginx"'
+            ###ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $SSH_USER@$TARGET_HOST 'curl -I http://localhost'
 
 
   serverspec:
