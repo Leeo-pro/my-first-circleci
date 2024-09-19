@@ -3,11 +3,15 @@
   tasks:
     - name: Enable Nginx in Amazon Linux Extras
       command: amazon-linux-extras enable nginx1
+      register: enable_nginx
+      failed_when: enable_nginx.rc != 0
 
     - name: Install Nginx
       yum:
         name: nginx
         state: present
+      register: nginx_install_result
+      failed_when: nginx_install_result.failed
 
     - name: Ensure Nginx is started and enabled
       service:
@@ -16,7 +20,7 @@
         enabled: yes
 
     - name: check nginx install
-      shell: nginx -v
+      shell: which nginx
       register: nginx_installed
-    - debug:
-        var: nginx_installed
+      changed_when: false
+      failed_when: nginx_installed.rc != 0
