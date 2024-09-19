@@ -1,51 +1,13 @@
 - hosts: webservers
   become: yes
   tasks:
-    - name: Print a message
-      debug:
-        msg: "Ansible playbook is running!"
-
-    - name: Update APT package index (Ubuntu/Debian)
-      apt:
-        update_cache: yes
-
     - name: Enable Nginx in Amazon Linux Extras
       command: amazon-linux-extras enable nginx1
-
-
-    - name: nginx install
-      become_user: root
-      shell: bash -lc "amazon-linux-extras install -y nginx1"
-      when: nginx_installed is failed
-
-
-
-
-    - name: start nginx service
-      become_user: root
-      service:
-        name: nginx
-        state: started
-      register: nginx_started
 
     - name: Install Nginx
       yum:
         name: nginx
         state: present
-
-
-    - name: Install Nginx
-      package:
-        name: nginx
-        state: present
-
-
-    - name: check nginx install
-      shell: bash -lc "nginx -v"
-      register: nginx_installed
-      changed_when: no
-      ignore_errors: yes
-
 
     - name: Ensure Nginx is started and enabled
       service:
@@ -53,29 +15,8 @@
         state: started
         enabled: yes
 
-    - name: Ensure Nginx is enabled on boot
-      service:
-        name: nginx
-        enabled: yes
-
-    - name: Wait for Nginx to be accessible on port 80
-      wait_for:
-        port: 80
-        state: started
-        timeout: 30
-        delay: 5
-
-    - name: Check if Nginx is installed
-      command: which nginx
-      register: nginx_path
-      ignore_errors: true
-
-    - name: Check Nginx version
-      command: nginx -v
-      register: nginx_version
-      failed_when: "'command not found' in nginx_version.stderr"
-
-    - name: Check Nginx status
-      command: systemctl status nginx
-      register: nginx_status
-      failed_when: "'not found' in nginx_status.stderr"
+    - name: check nginx install
+      shell: nginx -v
+      register: nginx_installed
+    - debug:
+        var: nginx_installed
