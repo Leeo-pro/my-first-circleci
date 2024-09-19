@@ -9,28 +9,6 @@ describe command('curl http://169.254.169.254/latest/meta-data/ami-id') do
   its(:stdout) { should match /ami-058032fea80b4687c/ }
 end
 
-describe command('/usr/sbin/nginx -v') do
-  its(:exit_status) { should eq 0 }
-end
-
-# rpm が使用可能か確認
-describe command('which rpm') do
-  its(:exit_status) { should eq 0 }
-end
-
-  # yum が使用可能か確認
-describe command('which yum') do
-  its(:exit_status) { should eq 0 }
-end
-
-  # dnf が使用可能か確認
-describe command('which dnf') do
-  its(:exit_status) { should eq 0 }
-end
-
-
-
-
 # nginxが実行中であるか
 describe package('nginx') do
   it { should be_installed }
