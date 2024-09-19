@@ -1,52 +1,53 @@
 - hosts: webservers
   become: yes
   tasks:
-    - name: Update yum cache
-      yum:
-        name: '*'
-        state: latest
-
+    # 1. Amazon Linux ExtrasでNginxを有効化
     - name: Enable Nginx in Amazon Linux Extras
       command: amazon-linux-extras enable nginx1
-      register: enable_nginx
-      failed_when: enable_nginx.rc != 0
-    - debug:
-        var: enable_nginx
 
-    - name: Check Amazon Linux Extras for Nginx
-      command: amazon-linux-extras list
-      register: extras_list
-    - debug:
-        var: extras_list
+    # 2. YumキャッシュをクリアしてからNginxをインストール
+    - name: Clear Yum Cache
+      command: yum clean all
 
     - name: Install Nginx
       yum:
         name: nginx
         state: present
       register: nginx_install_result
-      failed_when: nginx_install_result.failed
     - debug:
         var: nginx_install_result
 
-    - name: List installed packages (for Nginx)
-      command: yum list installed | grep nginx
-      register: nginx_installed_packages
-      failed_when: nginx_installed_packages.rc != 0
+    # 3. Nginxがインストールされたか確認
+    - name: Check Nginx installation status
+      command: "yum list installed | grep nginx"
+      register: nginx_installed
+      failed_when: nginx_installed.rc != 0
     - debug:
-        var: nginx_installed_packages
+        var: nginx_installed
 
+    # 4. Nginxのバイナリパスを確認
+    - name: Find Nginx binary
+      shell: "find / -name 'nginx' | grep bin"
+      register: nginx_binary_path
+      failed_when: nginx_binary_path.rc != 0
+    - debug:
+        var: nginx_binary_path
+
+    # 5. パスにNginxが含まれていない場合、追加
+    - name: Add Nginx to PATH
+      shell: "export PATH=$PATH:/usr/sbin"
+      when: "'/usr/sbin/nginx' in nginx_binary_path.stdout"
+
+    # 6. Nginxを起動し、自動起動を有効化
     - name: Ensure Nginx is started and enabled
       service:
         name: nginx
         state: started
         enabled: yes
-      register: nginx_service_status
-    - debug:
-        var: nginx_service_status
 
-    - name: Check Nginx binary location
-      shell: "which nginx"
-      register: nginx_path
-      failed_when: nginx_path.rc != 0
+    # 7. Nginxが正しくインストールされ、動作しているかを確認
+    - name: Check Nginx version
+      shell: nginx -v
+      register: nginx_version_check
     - debug:
-        var: nginx_path
+        var: nginx_version_check
