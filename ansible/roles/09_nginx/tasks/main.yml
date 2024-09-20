@@ -1,0 +1,109 @@
+---
+- name: installed nginx
+  become: true
+  shell: nginx -version
+  register: nginx_check
+  changed_when: false
+  ignore_errors: true
+
+- name: Enable nginx1 repository
+  become: true
+  command:
+    cmd: amazon-linux-extras install -y nginx1
+  when: nginx_check is failed
+  register:  nginx_install
+
+- name: debug_nginx_install
+  become: true
+  debug:
+    msg: "{{ nginx_install }}"
+
+
+- name: development.rb copy
+  become: true
+  template:
+    src: development.rb.j2
+    dest: "{{ sample_app_dir }}/config/environments/development.rb"
+# nginxのアプリ別設定ファイル
+- name: nginx the app configfile of copy
+  become: true
+  template:
+    src: puma.conf.j2
+    dest: /etc/nginx/conf.d/puma.conf
+# nginxの全般設定ファイル
+- name: nginx the general config of copy
+  become: true
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+
+- name: Add puma.service.sample
+  become: true
+  template:
+    src: puma.service.sample.j2
+    dest: /etc/systemd/system/puma.service
+
+- name: copy of storage.yml
+  template:
+    src: storage.yml.j2
+    dest: "{{ sample_app_dir }}/config/storage.yml"
+# ファイルの指定した行に追記するtask、アプリのルートを正しく修正するため
+- name: "insert or replace directory path"
+  lineinfile:
+    path: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
+    insertafter: '^# directory "/var/www/rails/raisetech-live8-sample-app"$'
+    line: ' directory "/home/ec2-user/raisetech-live8-sample-app"'
+
+- name: start nginx
+  become: true
+  service:
+    name: nginx
+    state: started
+    enabled: true
+
+- name: bundle install
+  shell: bash -lc bundle install
+  args:
+    chdir: "{{ sample_app_dir}}"
+
+- name: gem install rails
+  shell: "/home/ec2-user/.rbenv/shims/gem install rails"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/home/ec2-user/.rbenv/shims:/home/ec2-user/.rbenv/bin"
+    RBENV_ROOT: "/home/ec2-user/.rbenv"
+
+
+- name: deploy environment setup
+  shell: |
+    bash -lc "bin/setup"
+  args:
+    chdir: "{{ sample_app_dir }}"
+  ignore_errors: true
+
+# mini_magick を使えるように追記した設定ファイルをコピー
+- name: configfile copy Rails app
+  template:
+    src: application.rb.j2
+    dest: "{{ sample_app_dir }}/config/application.rb"
+
+- name: rails assets:precompile
+  shell: |
+    bash -lc "rails assets:precompile"
+  args:
+    chdir: "{{ sample_app_dir }}"
+  ignore_errors: true
+
+
+
+- name: start nginx
+  become: true
+  service:
+    name: nginx
+    state: restarted
+
+- name: puma service start
+  become: true
+  service:
+    name: puma.service
+    state: restarted
+    enabled: true

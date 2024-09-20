@@ -1,53 +1,22 @@
-- hosts: webservers
-  become: yes
-  tasks:
-    # 1. Amazon Linux ExtrasでNginxを有効化
-    - name: Enable Nginx in Amazon Linux Extras
-      command: amazon-linux-extras enable nginx1
-
-    # 2. YumキャッシュをクリアしてからNginxをインストール
-    - name: Clear Yum Cache
-      command: yum clean all
-
-    - name: Install Nginx
-      yum:
-        name: nginx
-        state: present
-      register: nginx_install_result
-    - debug:
-        var: nginx_install_result
-
-    # 3. Nginxがインストールされたか確認
-    - name: Check Nginx installation status
-      command: "yum list installed | grep nginx"
-      register: nginx_installed
-      failed_when: nginx_installed.rc != 0
-    - debug:
-        var: nginx_installed
-
-    # 4. Nginxのバイナリパスを確認
-    - name: Find Nginx binary
-      shell: "find / -name 'nginx' | grep bin"
-      register: nginx_binary_path
-      failed_when: nginx_binary_path.rc != 0
-    - debug:
-        var: nginx_binary_path
-
-    # 5. パスにNginxが含まれていない場合、追加
-    - name: Add Nginx to PATH
-      shell: "export PATH=$PATH:/usr/sbin"
-      when: "'/usr/sbin/nginx' in nginx_binary_path.stdout"
-
-    # 6. Nginxを起動し、自動起動を有効化
-    - name: Ensure Nginx is started and enabled
-      service:
-        name: nginx
-        state: started
-        enabled: yes
-
-    # 7. Nginxが正しくインストールされ、動作しているかを確認
-    - name: Check Nginx version
-      shell: nginx -v
-      register: nginx_version_check
-    - debug:
-        var: nginx_version_check
+- hosts:
+    - webservers
+  become: True
+  become_user: ec2-user
+  roles:
+    - { role: 01_yum, tags: yum }
+    - { role: 02_ruby, tags: ruby }
+    - { role: 03_bundler, tags: bundler }
+    - { role: 04_rails, tags: rails }
+    - { role: 05_node, tags: node }
+    - { role: 06_yarn, tags: yarn }
+    - { role: 07_app, tags: app }
+    - { role: 08_mysql, tags: mysql }
+    - { role: 09_nginx, tags: nginx }
+  vars:
+    sample_app_dir: /var/www/raisetech-live8-sample-app
+    aws_db_user: "{{ (lookup('env','AWS_DB_USER')) }}"
+    aws_db_pw : "{{ (lookup('env','AWS_DB_PW')) }}"
+    aws_db_host : "{{ (lookup('env','AWS_DB_HOST')) }}"
+    aws_s3_access_key : "{{ (lookup('env','AWS_S3_ACCESS_KEY')) }}"
+    aws_s3_secret_access_key: "{{ (lookup('env','AWS_S3_SECRET_ACCESS_KEY')) }}"
+    aws_s3_bucket: "{{ (lookup('env','AWS_S3_BUCKET')) }}"
