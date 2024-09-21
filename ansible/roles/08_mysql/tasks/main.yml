@@ -4,6 +4,14 @@
     name: mariadb-server
     state: absent
 
+- name: Force remove mariadb-libs
+  become: true
+  yum:
+    name: mariadb-libs
+    state: absent
+    remove: true
+  ignore_errors: true
+
 - name: Install MySQL repository
   become_user: root
   yum:
@@ -12,12 +20,18 @@
     disable_gpg_check: true
   register: mysql_installed
 
-- name: Import GPG key
+- name: Remove old GPG keys
   become_user: root
-  ansible.builtin.rpm_key:
+  rpm_key:
+    state: absent
+    key: https://repo.mysql.com/RPM-GPG-KEY-mysql
+  ignore_errors: true
+
+- name: Import new GPG key
+  become_user: root
+  rpm_key:
     state: present
     key: https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
-  when: mysql_installed.changed
 
 - name: install mysql-community-client
   become_user: root
@@ -34,13 +48,6 @@
     state: present
     disable_gpg_check: true
   when: mysql_installed.changed
-
-- name: Install RPM-GPG-KEY-mysql
-  become_user: root
-  rpm_key:
-    state: present
-    key: https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
-  ignore_errors: true
 
 - name: bin/setup
   shell: |
