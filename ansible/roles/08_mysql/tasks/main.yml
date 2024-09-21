@@ -9,6 +9,7 @@
   yum:
     name: 'https://repo.mysql.com//mysql80-community-release-el7-7.noarch.rpm'
     state: present
+    disable_gpg_check: true 
   register: mysql_installed
 
 - name: Import GPG key
