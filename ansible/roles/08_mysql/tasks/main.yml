@@ -32,6 +32,13 @@
     state: present
   when: mysql_installed.changed
 
+- name: Install RPM-GPG-KEY-mysql
+  become_user: root
+  rpm_key:
+    state: present
+    key: https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
+  ignore_errors: true
+
 - name: bin/setup
   shell: |
     bash -lc "bin/setup"
