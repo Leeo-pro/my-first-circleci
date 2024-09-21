@@ -16,23 +16,11 @@
     recurse: yes
   when: git_clone.changed
 
-- name: create database.yml
-  become_user: root
-  template:
-    src: database.yml.j2
-    dest: "{{ sample_app_dir }}/config/database.yml"
-
 - name: create storage.yml
   become_user: root
   template:
     src: storage.yml.j2
     dest: "{{ sample_app_dir }}/config/storage.yml"
-
-- name: edit unicorn.rb
-  become_user: root
-  template:
-    src: unicorn.rb.j2
-    dest: "{{ sample_app_dir }}/config/unicorn.rb"
 
 - name: edit development.rb
   become_user: root
