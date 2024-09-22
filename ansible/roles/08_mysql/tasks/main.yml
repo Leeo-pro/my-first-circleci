@@ -2,61 +2,34 @@
   become: true
   command: yum clean all
 
-- name: Remove old MySQL GPG keys (if exist)
-  become: true
-  file:
-    path: /etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
-    state: absent
-  ignore_errors: true
-
-- name: Remove MySQL 2022 GPG keys (if exist)
-  become: true
-  file:
-    path: /etc/pki/rpm-gpg/RPM-GPG-KEY-mysql-2022
-    state: absent
-  ignore_errors: true
-
-- name: Rebuild yum cache
-  become: true
-  command: yum makecache
-
-- name: Remove MariaDB
+- name: Install MySQL repository (if not already installed)
   become: true
   yum:
-    name: mariadb-server
-    state: absent
-  ignore_errors: true
-  register: mariadb_removed
+    name: https://repo.mysql.com/mysql80-community-release-el7-11.noarch.rpm
+    state: present
+    disable_gpg_check: true
 
-- name: Force remove mariadb-libs with rpm
+- name: Ensure mysql-community-client is installed
   become: true
-  command: rpm -e --nodeps mariadb-libs
-  when: mariadb_removed.failed
-  ignore_errors: true
+  yum:
+    name: mysql-community-client
+    state: present
+    disable_gpg_check: true
 
-- name: Install MySQL repository (updated to el7-11)
+- name: Ensure mysql-community-devel is installed
   become: true
-  command: yum install -y https://repo.mysql.com/mysql80-community-release-el7-11.noarch.rpm --setopt=skip_broken=True --nogpgcheck
-  register: mysql_installed
+  yum:
+    name: mysql-community-devel
+    state: present
+    disable_gpg_check: true
 
-- name: Install mysql-community-client
-  become: true
-  command: yum install -y mysql-community-client --setopt=skip_broken=True --nogpgcheck
-  when: mysql_installed.changed
-
-- name: Install mysql-community-devel
-  become: true
-  command: yum install -y mysql-community-devel --setopt=skip_broken=True --nogpgcheck
-  when: mysql_installed.changed
-
-- name: bin/setup
+- name: Run setup script
   shell: |
     bash -lc "bin/setup"
   args:
     chdir: "{{ sample_app_dir }}"
-  when: mysql_installed.changed
 
-- name: asset precompile
+- name: Precompile assets
   shell: |
     bash -lc "rails assets:precompile"
   args:
