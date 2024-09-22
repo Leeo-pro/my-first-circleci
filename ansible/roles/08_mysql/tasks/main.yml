@@ -2,15 +2,22 @@
   become: true
   command: yum clean all
 
-- name: Remove old GPG keys
-  become_user: root
-  rpm_key:
+- name: Remove old MySQL GPG keys (if exist)
+  become: true
+  file:
+    path: /etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
     state: absent
-    key: https://repo.mysql.com/RPM-GPG-KEY-mysql
   ignore_errors: true
 
-- name: Import new GPG key
-  become_user: root
+- name: Remove MySQL 2022 GPG keys (if exist)
+  become: true
+  file:
+    path: /etc/pki/rpm-gpg/RPM-GPG-KEY-mysql-2022
+    state: absent
+  ignore_errors: true
+
+- name: Import MySQL 2022 GPG key
+  become: true
   rpm_key:
     state: present
     key: https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
@@ -34,15 +41,15 @@
   ignore_errors: true
 
 - name: Install MySQL repository (updated to el7-11)
-  become_user: root
+  become: true
   yum:
     name: 'https://repo.mysql.com/mysql80-community-release-el7-11.noarch.rpm'
     state: present
     disable_gpg_check: true
   register: mysql_installed
 
-- name: install mysql-community-client
-  become_user: root
+- name: Install mysql-community-client
+  become: true
   yum:
     name: mysql-community-client
     state: present
@@ -51,7 +58,7 @@
   when: mysql_installed.changed
 
 - name: Install mysql-community-devel
-  become_user: root
+  become: true
   yum:
     name: mysql-community-devel
     state: present
