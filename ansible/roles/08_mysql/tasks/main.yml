@@ -16,12 +16,6 @@
     state: absent
   ignore_errors: true
 
-- name: Import MySQL 2022 GPG key
-  become: true
-  rpm_key:
-    state: present
-    key: https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
-
 - name: Rebuild yum cache
   become: true
   command: yum makecache
@@ -45,7 +39,7 @@
   yum:
     name: 'https://repo.mysql.com/mysql80-community-release-el7-11.noarch.rpm'
     state: present
-    disable_gpg_check: true
+    disable_gpg_check: true  # GPGチェックを無効に
   register: mysql_installed
 
 - name: Install mysql-community-client
@@ -53,8 +47,7 @@
   yum:
     name: mysql-community-client
     state: present
-    disable_gpg_check: true
-    skip_broken: yes
+    disable_gpg_check: true  # GPGチェックを無効に
   when: mysql_installed.changed
 
 - name: Install mysql-community-devel
@@ -62,8 +55,7 @@
   yum:
     name: mysql-community-devel
     state: present
-    disable_gpg_check: true
-    skip_broken: yes
+    disable_gpg_check: true  # GPGチェックを無効に
   when: mysql_installed.changed
 
 - name: bin/setup
