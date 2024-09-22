@@ -36,26 +36,17 @@
 
 - name: Install MySQL repository (updated to el7-11)
   become: true
-  yum:
-    name: 'https://repo.mysql.com/mysql80-community-release-el7-11.noarch.rpm'
-    state: present
-    disable_gpg_check: true  # GPGチェックを無効に
+  command: yum install -y https://repo.mysql.com/mysql80-community-release-el7-11.noarch.rpm --setopt=skip_broken=True --nogpgcheck
   register: mysql_installed
 
 - name: Install mysql-community-client
   become: true
-  yum:
-    name: mysql-community-client
-    state: present
-    disable_gpg_check: true  # GPGチェックを無効に
+  command: yum install -y mysql-community-client --setopt=skip_broken=True --nogpgcheck
   when: mysql_installed.changed
 
 - name: Install mysql-community-devel
   become: true
-  yum:
-    name: mysql-community-devel
-    state: present
-    disable_gpg_check: true  # GPGチェックを無効に
+  command: yum install -y mysql-community-devel --setopt=skip_broken=True --nogpgcheck
   when: mysql_installed.changed
 
 - name: bin/setup
