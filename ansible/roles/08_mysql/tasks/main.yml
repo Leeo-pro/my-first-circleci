@@ -1,21 +1,29 @@
+- name: Clear yum cache
+  become: true
+  command: yum clean all
+
+- name: Rebuild yum cache
+  become: true
+  command: yum makecache
+
 - name: Remove MariaDB
   become: true
   yum:
     name: mariadb-server
     state: absent
+  ignore_errors: true
+  register: mariadb_removed
 
-- name: Force remove mariadb-libs
+- name: Force remove mariadb-libs with rpm
   become: true
-  yum:
-    name: mariadb-libs
-    state: absent
-    remove: true
+  command: rpm -e --nodeps mariadb-libs
+  when: mariadb_removed.failed
   ignore_errors: true
 
-- name: Install MySQL repository
+- name: Install MySQL repository (updated to el7-11)
   become_user: root
   yum:
-    name: 'https://repo.mysql.com//mysql80-community-release-el7-7.noarch.rpm'
+    name: 'https://repo.mysql.com/mysql80-community-release-el7-11.noarch.rpm'
     state: present
     disable_gpg_check: true
   register: mysql_installed
@@ -39,6 +47,7 @@
     name: mysql-community-client
     state: present
     disable_gpg_check: true
+    skip_broken: yes
   when: mysql_installed.changed
 
 - name: Install mysql-community-devel
@@ -47,6 +56,7 @@
     name: mysql-community-devel
     state: present
     disable_gpg_check: true
+    skip_broken: yes
   when: mysql_installed.changed
 
 - name: bin/setup
