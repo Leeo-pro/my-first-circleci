@@ -2,6 +2,19 @@
   become: true
   command: yum clean all
 
+- name: Remove old GPG keys
+  become_user: root
+  rpm_key:
+    state: absent
+    key: https://repo.mysql.com/RPM-GPG-KEY-mysql
+  ignore_errors: true
+
+- name: Import new GPG key
+  become_user: root
+  rpm_key:
+    state: present
+    key: https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
+
 - name: Rebuild yum cache
   become: true
   command: yum makecache
@@ -27,19 +40,6 @@
     state: present
     disable_gpg_check: true
   register: mysql_installed
-
-- name: Remove old GPG keys
-  become_user: root
-  rpm_key:
-    state: absent
-    key: https://repo.mysql.com/RPM-GPG-KEY-mysql
-  ignore_errors: true
-
-- name: Import new GPG key
-  become_user: root
-  rpm_key:
-    state: present
-    key: https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
 
 - name: install mysql-community-client
   become_user: root
