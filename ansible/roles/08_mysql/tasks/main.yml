@@ -1,41 +1,69 @@
-- name: Clear yum cache
+---
+- name: yum update all package
   become: true
-  command: yum clean all
+  ansible.builtin.yum:
+    name: "*"
+    state: latest
 
-- name: Remove existing MySQL GPG keys (if exist)
+- name: Install pip
   become: true
-  file:
-    path: /etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
+  yum:
+    name: python-pip
+    state: present
+
+- name: uninstall MariaDB
+  become: true
+  yum:
+    name: mariadb*
     state: absent
+
+- name: Install PyMySQL
+  become: true
+  pip:
+    name: PyMySQL
+    state: present
+
+- name: Install pymysql using pip
+  become: true
+  pip:
+    name: pymysql
+    state: present
+
+- name: Install RPM-GPG-KEY-mysql
+  become: true
+  rpm_key:
+    state: present
+    key: https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
   ignore_errors: true
 
-- name: Remove existing MySQL 2022 GPG keys (if exist)
+- name: install myaql repository
   become: true
-  file:
-    path: /etc/pki/rpm-gpg/RPM-GPG-KEY-mysql-2022
-    state: absent
+  yum:
+    name: "https://repo.mysql.com//mysql84-community-release-el7-1.noarch.rpm"
+    state: present
+
+- name: install mysql packges
+  become: true
+  yum:
+    name:
+      - mysql-community-devel
+      - mysql-community-server
+      - mysql-community-client
+    state: present
+
+
+- name: Start MySQL service
+  become: true
+  systemd:
+    name: mysqld
+    state: started
   ignore_errors: true
 
-- name: Install MySQL repository
+
+
+
+- name: Start MySQL service
   become: true
-  command: yum install -y https://repo.mysql.com/mysql80-community-release-el7-11.noarch.rpm --setopt=skip_broken=True --nogpgcheck
-
-- name: Ensure mysql-community-client is installed
-  become: true
-  command: yum install -y mysql-community-client --setopt=skip_broken=True --nogpgcheck
-
-- name: Ensure mysql-community-devel is installed
-  become: true
-  command: yum install -y mysql-community-devel --setopt=skip_broken=True --nogpgcheck
-
-- name: Run setup script
-  shell: |
-    bash -lc "bin/setup"
-  args:
-    chdir: "{{ sample_app_dir }}"
-
-- name: Precompile assets
-  shell: |
-    bash -lc "rails assets:precompile"
-  args:
-    chdir: "{{ sample_app_dir }}"
+  systemd:
+    name: mysqld
+    state: restarted
