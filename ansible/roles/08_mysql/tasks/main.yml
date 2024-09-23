@@ -1,37 +1,41 @@
 # rpmのインストールを追加
 - name: install rpm
   yum:
-    name: https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm 
+    name: https://yum.puppetlabs.com/puppetlabs-release-pc1-el-11.noarch.rpm
 
 - name: Clear yum cache
   become: true
   command: yum clean all
 
-- name: Remove existing MySQL GPG keys (if exist)
+- name: Remove existing MySQL GPG keys
   become: true
   file:
     path: /etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
     state: absent
-  ignore_errors: true
 
-- name: Remove existing MySQL 2022 GPG keys (if exist)
+- name: Remove existing MySQL 2022 GPG keys
   become: true
   file:
     path: /etc/pki/rpm-gpg/RPM-GPG-KEY-mysql-2022
     state: absent
-  ignore_errors: true
 
 - name: Install MySQL repository
   become: true
-  command: yum install -y https://repo.mysql.com/mysql80-community-release-el7-11.noarch.rpm --setopt=skip_broken=True --nogpgcheck
+  yum:
+    name: https://repo.mysql.com/mysql80-community-release-el7-11.noarch.rpm
+    state: present
 
 - name: Ensure mysql-community-client is installed
   become: true
-  command: yum install -y mysql-community-client --setopt=skip_broken=True --nogpgcheck
+  yum:
+    name: mysql-community-client
+    state: present
 
 - name: Ensure mysql-community-devel is installed
   become: true
-  command: yum install -y mysql-community-devel --setopt=skip_broken=True --nogpgcheck
+  yum:
+    name: mysql-community-devel
+    state: present
 
 - name: Run setup script
   shell: |
