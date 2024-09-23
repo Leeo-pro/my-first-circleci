@@ -1,48 +1,49 @@
 # rpmのインストールを追加
+- name: uninstall MariaDB
+  become: true
+  yum:
+    name: mariadb*
+    state: absent
+
 - name: install rpm
   yum:
     name: https://yum.puppetlabs.com/puppetlabs-release-pc1-el-11.noarch.rpm
 
-- name: Clear yum cache
-  become: true
-  command: yum clean all
+# Import MySQL 2023 GPG key (GPGキーのインポート)
+- name: Import MySQL 2023 GPG key
+  rpm_key:
+    state: present
+    key: https://repo.mysql.com/RPM-GPG-KEY-mysql-2023
 
-- name: Remove existing MySQL GPG keys
-  become: true
-  file:
-    path: /etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
-    state: absent
-
-- name: Remove existing MySQL 2022 GPG keys
-  become: true
-  file:
-    path: /etc/pki/rpm-gpg/RPM-GPG-KEY-mysql-2022
-    state: absent
-
+# Install MySQL repository
 - name: Install MySQL repository
   become: true
   yum:
     name: https://repo.mysql.com/mysql80-community-release-el7-11.noarch.rpm
     state: present
 
+# Ensure mysql-community-client is installed
 - name: Ensure mysql-community-client is installed
   become: true
   yum:
     name: mysql-community-client
     state: present
 
+# Ensure mysql-community-devel is installed
 - name: Ensure mysql-community-devel is installed
   become: true
   yum:
     name: mysql-community-devel
     state: present
 
+# Run setup script
 - name: Run setup script
   shell: |
     bash -lc "bin/setup"
   args:
     chdir: "{{ sample_app_dir }}"
 
+# Precompile assets
 - name: Precompile assets
   shell: |
     bash -lc "rails assets:precompile"
