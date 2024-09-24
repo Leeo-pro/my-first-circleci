@@ -1,5 +1,5 @@
 ---
-- name: installed nginx
+- name: Check if nginx is installed
   become: true
   shell: nginx -version
   register: nginx_check
@@ -8,10 +8,9 @@
 
 - name: Enable nginx1 repository
   become: true
-  command:
-    cmd: amazon-linux-extras install -y nginx1
-  when: nginx_check is failed
-  register:  nginx_install
+  command: amazon-linux-extras install -y nginx1
+  when: nginx_check.rc != 0  # nginxがインストールされていない場合
+  register: nginx_install
 
 - name: debug_nginx_install
   become: true
