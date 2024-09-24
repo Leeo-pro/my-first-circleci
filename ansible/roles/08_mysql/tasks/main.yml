@@ -7,6 +7,7 @@
 
 - name: Install pip
   become: true
+  become_user: ec2-user
   yum:
     name: python-pip
     state: present
