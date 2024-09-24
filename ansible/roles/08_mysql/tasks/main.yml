@@ -5,12 +5,6 @@
     name: "*"
     state: latest
 
-- name: Install pip
-  become: true
-  become_user: ec2-user
-  yum:
-    name: python-pip
-    state: present
 
 - name: uninstall MariaDB
   become: true
@@ -18,17 +12,17 @@
     name: mariadb*
     state: absent
 
-- name: Install PyMySQL
-  become: true
-  pip:
-    name: PyMySQL
-    state: present
 
-- name: Install pymysql using pip
-  become: true
-  pip:
-    name: pymysql
-    state: present
+- name: Check if GPG key is already installed
+  stat:
+    path: /etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
+  register: gpg_key_check
+
+- name: Install MySQL GPG key if not present
+  get_url:
+    url: http://repo.mysql.com/RPM-GPG-KEY-mysql
+    dest: /etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
+  when: not gpg_key_check.stat.exists
 
 
 
