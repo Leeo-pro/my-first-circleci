@@ -6,10 +6,10 @@
     state: absent
 
 # Import MySQL 2023 GPG key (GPGキーのインポート)
-- name: Import MySQL 2023 GPG key
-  rpm_key:
-    state: present
-    key: https://repo.mysql.com/RPM-GPG-KEY-mysql-2023
+# Manually import MySQL GPG key using rpm command
+- name: Manually import MySQL GPG key
+  become: true
+  shell: rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2023
 
 # Install MySQL repository
 - name: Install MySQL repository
