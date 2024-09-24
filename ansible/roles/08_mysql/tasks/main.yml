@@ -1,4 +1,10 @@
 # rpmのインストールを追加
+- name: yum update all package
+  become: true
+  ansible.builtin.yum:
+    name: "*"
+    state: latest
+
 - name: uninstall MariaDB
   become: true
   yum:
