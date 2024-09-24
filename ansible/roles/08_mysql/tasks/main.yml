@@ -29,30 +29,7 @@
     name: pymysql
     state: present
 
-- name: Install RPM-GPG-KEY-mysql
-  become: true
-  rpm_key:
-    state: present
-    key: https://repo.mysql.com/RPM-GPG-KEY-mysql-2023
-  ignore_errors: true
 
-# Install MySQL repository
-- name: Install MySQL repository
-  become: true
-  yum:
-    name: https://repo.mysql.com/mysql80-community-release-el7-11.noarch.rpm
-    state: present
-    disable_gpg_check: true
-
-- name: install mysql packges
-  become: true
-  yum:
-    name:
-      - mysql-community-devel
-      - mysql-community-server
-      - mysql-community-client
-    state: present
-    disable_gpg_check: true
 
 # Run setup script
 - name: Run setup script
