@@ -5,17 +5,36 @@
     name: "*"
     state: latest
 
+- name: Install pip
+  become: true
+  yum:
+    name: python-pip
+    state: present
+
 - name: uninstall MariaDB
   become: true
   yum:
     name: mariadb*
     state: absent
 
-# Import MySQL 2023 GPG key (GPGキーのインポート)
-# Manually import MySQL GPG key using rpm command
-- name: Manually import MySQL GPG key
+- name: Install PyMySQL
   become: true
-  shell: rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2023
+  pip:
+    name: PyMySQL
+    state: present
+
+- name: Install pymysql using pip
+  become: true
+  pip:
+    name: pymysql
+    state: present
+
+- name: Install RPM-GPG-KEY-mysql
+  become: true
+  rpm_key:
+    state: present
+    key: https://repo.mysql.com/RPM-GPG-KEY-mysql-2023
+  ignore_errors: true
 
 # Install MySQL repository
 - name: Install MySQL repository
@@ -25,19 +44,15 @@
     state: present
     disable_gpg_check: true
 
-# Ensure mysql-community-client is installed
-- name: Ensure mysql-community-client is installed
+- name: install mysql packges
   become: true
   yum:
-    name: mysql-community-client
+    name:
+      - mysql-community-devel
+      - mysql-community-server
+      - mysql-community-client
     state: present
-
-# Ensure mysql-community-devel is installed
-- name: Ensure mysql-community-devel is installed
-  become: true
-  yum:
-    name: mysql-community-devel
-    state: present
+    disable_gpg_check: true
 
 # Run setup script
 - name: Run setup script
