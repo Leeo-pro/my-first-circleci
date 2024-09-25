@@ -67,7 +67,7 @@
     dest: "{{ sample_app_dir }}/config/storage.yml"
 
 - name: Copy application.rb for Rails
-  become: true
+  become_user: root
   template:
     src: application.rb.j2
     dest: "{{ sample_app_dir }}/config/application.rb"
