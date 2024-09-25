@@ -35,25 +35,25 @@
     dest: "{{ sample_app_dir }}/config/environments/development.rb"
 
 - name: Copy nginx app configuration file
-  become: true
+  become_user: root
   template:
     src: puma.conf.j2
     dest: /etc/nginx/conf.d/puma.conf
 
 - name: Copy nginx general configuration file
-  become: true
+  become_user: root
   template:
     src: nginx.conf.j2
     dest: /etc/nginx/nginx.conf
 
 - name: Copy puma.service configuration
-  become: true
+  become_user: root
   template:
     src: puma.service.sample.j2
     dest: /etc/systemd/system/puma.service
 
 - name: Copy storage.yml configuration
-  become: true
+  become_user: root
   template:
     src: storage.yml.j2
     dest: "{{ sample_app_dir }}/config/storage.yml"
