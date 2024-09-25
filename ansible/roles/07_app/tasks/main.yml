@@ -28,6 +28,12 @@
     src: storage.yml.j2
     dest: "{{ sample_app_dir }}/config/storage.yml"
 
+- name: "insert or replace directory path"
+  lineinfile:
+    path: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
+    insertafter: '^# directory "/var/www/rails/raisetech-live8-sample-app"$'
+    line: ' directory "/home/ec2-user/raisetech-live8-sample-app"'
+
 - name: edit development.rb
   become_user: root
   template:
