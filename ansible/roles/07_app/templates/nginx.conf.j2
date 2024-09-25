@@ -44,7 +44,7 @@ http {
     server {
         listen       80;
         listen       [::]:80;
-        server_name  {{ ALB_DNS }};
+        server_name  {{ alb_dns }};
       #  root         /usr/share/nginx/html;
         root         /home/ec2-user/raisetech-live8-sample-app;
 
