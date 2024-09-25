@@ -78,7 +78,7 @@
     state: restarted
 
 - name: Start and enable puma service
-  become: true
+  become_user: root
   service:
     name: puma.service
     state: restarted
