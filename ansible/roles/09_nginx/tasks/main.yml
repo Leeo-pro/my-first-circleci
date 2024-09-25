@@ -64,12 +64,6 @@
     chdir: "{{ sample_app_dir }}"
   ignore_errors: true
 
-- name: Copy application.rb for Rails
-  become: true
-  template:
-    src: application.rb.j2
-    dest: "{{ sample_app_dir }}/config/application.rb"
-
 - name: Precompile Rails assets
   become: true
   shell: bash -lc "rails assets:precompile"
