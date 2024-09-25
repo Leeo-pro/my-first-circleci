@@ -4,7 +4,7 @@ upstream app {
 
 server {
     listen       80;
-    server_name  {{ ALB_DNS }};
+    server_name  {{ alb_dns }};
 
     access_log  /var/log/nginx/access.log;
     error_log   /var/log/nginx/error.log;
