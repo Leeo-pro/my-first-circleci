@@ -1,5 +1,5 @@
 upstream app {
-    server  unix:/home/ec2-user/raisetech-live8-sample-app/tmp/sockets/puma.sock;
+    server  unix:/var/www/raisetech-live8-sample-app/tmp/sockets/puma.sock;
 }
 
 server {
@@ -9,7 +9,7 @@ server {
     access_log  /var/log/nginx/access.log;
     error_log   /var/log/nginx/error.log;
 
-    root /home/ec2-user/raisetech-live8-sample-app/public;
+    root /var/www/raisetech-live8-sample-app/public;
 
     client_max_body_size 100m;
     error_page  404              /404.html;
