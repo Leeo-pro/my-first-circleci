@@ -22,7 +22,8 @@ User=ec2-user
 # The path to the your application code root directory.
 # Also replace the "<YOUR_APP_PATH>" place holders below with this path.
 # Example /home/username/myapp
-WorkingDirectory=/home/ec2-user/raisetech-live8-sample-app
+WorkingDirectory=/var/www/raisetech-live8-sample-app
+### WorkingDirectory=/home/ec2-user/raisetech-live8-sample-app
 
 # Helpful for debugging socket activation, etc.
 Environment=PUMA_DEBUG=1
@@ -34,7 +35,8 @@ Environment=PUMA_DEBUG=1
 
 # Variant: Rails start.
 # ExecStart=/<FULLPATH>/bin/puma -C <YOUR_APP_PATH>/config/puma.rb ../config.ru
-ExecStart=/bin/bash -lc 'bundle exec puma -C config/puma.rb'
+ExecStart=/bin/bash -lc 'bundle exec puma -C /var/www/raisetech-live8-sample-app/config/puma.rb'
+### ExecStart=/bin/bash -lc 'bundle exec puma -C config/puma.rb'
 
 # Enabled systemd reload
 # refs: https://zenn.dev/trysmr/articles/65a6db4deffdbf
