@@ -46,7 +46,7 @@ http {
         listen       [::]:80;
         server_name  {{ alb_dns }};
       #  root         /usr/share/nginx/html;
-        root         /home/ec2-user/raisetech-live8-sample-app;
+        root         /var/www/raisetech-live8-sample-app;
 
         # Load configuration files for the default server block.
         include /etc/nginx/default.d/*.conf;
