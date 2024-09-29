@@ -38,6 +38,15 @@
     line: ' directory "/var/www/raisetech-live8-sample-app"'
     create: true
 
+- name: Deploy Puma configuration
+  become: true
+  template:
+    src: puma.rb.j2
+    dest: /var/www/rails/raisetech-live8-sample-app/config/puma.rb
+    owner: ec2-user
+    group: ec2-user
+    mode: '0644'
+
 - name: Start and enable nginx
   become: true
   service:
