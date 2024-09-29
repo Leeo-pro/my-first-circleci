@@ -135,7 +135,7 @@ Resources:
     Properties:
       RouteTableIds:
         - !Ref PrivateRouteTable
-      ServiceName: com.amazonaws.ap-northeast-1.s3
+      ServiceName: com.amazonaws.ap-northeast-3.s3
       VpcEndpointType: Gateway
       VpcId: !Ref SampleVPC
 

@@ -1,0 +1,11 @@
+require 'rake'
+require 'rspec/core/rake_task'
+require 'serverspec'
+
+desc "Run serverspec tests"
+RSpec::Core::RakeTask.new(:spec) do |t|
+  # 修正: サブディレクトリのspecファイルも対象に含める
+  t.pattern = 'spec/**/*_spec.rb'
+end
+
+task default: :spec

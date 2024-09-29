@@ -1,0 +1,96 @@
+---
+- name: Check if nginx is installed
+  become: true
+  become_user: root
+  command: nginx -version
+  ignore_errors: true
+  register: nginx_check
+
+- name: Install nginx if not installed
+  become: true
+  yum:
+    name: nginx
+    state: present
+  when: nginx_check.rc != 0
+
+- name: Enable nginx1 repository
+  become: true
+  command: amazon-linux-extras install -y nginx1
+  when: nginx_check.rc != 0
+  register: nginx_install
+  ignore_errors: true
+
+- name: Install nginx using yum module (latest version)
+  become: true
+  yum:
+    name: nginx
+    state: latest
+
+- name: Debug nginx installation result
+  debug:
+    msg: "{{ nginx_install }}"
+
+- name: Update directory path in puma.rb
+  become: true
+  lineinfile:
+    path: "{{ sample_app_dir }}/config/puma.rb"
+    insertafter: '^# directory "/var/www/raisetech-live8-sample-app"$'
+    line: ' directory "/var/www/raisetech-live8-sample-app"'
+    create: true
+
+- name: Deploy Puma configuration
+  become: true
+  template:
+    src: puma.rb.j2
+    dest: /var/www/raisetech-live8-sample-app/config/puma.rb
+    owner: ec2-user
+    group: ec2-user
+    mode: '0644'
+
+- name: Start and enable nginx
+  become: true
+  service:
+    name: nginx
+    state: started
+    enabled: true
+
+- name: Install gems with bundle
+  become: true
+  shell: bash -lc "bundle install"
+  args:
+    chdir: "{{ sample_app_dir }}"
+
+- name: Install Rails gem
+  become: true
+  shell: "/home/ec2-user/.rbenv/shims/gem install rails"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/home/ec2-user/.rbenv/shims:/home/ec2-user/.rbenv/bin"
+    RBENV_ROOT: "/home/ec2-user/.rbenv"
+
+- name: Setup the deploy environment
+  become: true
+  shell: bash -lc "bin/setup"
+  args:
+    chdir: "{{ sample_app_dir }}"
+  ignore_errors: true
+
+- name: Precompile Rails assets
+  become: true
+  shell: bash -lc "rails assets:precompile"
+  args:
+    chdir: "{{ sample_app_dir }}"
+  ignore_errors: true
+
+- name: Restart nginx
+  become_user: root
+  service:
+    name: nginx
+    state: restarted
+
+- name: Start and enable puma service
+  become_user: root
+  service:
+    name: puma.service
+    state: restarted
+    enabled: true
+    daemon_reload: true

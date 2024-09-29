@@ -1,0 +1,66 @@
+---
+- name: git clone app
+  become_user: root
+  git:
+    repo: https://github.com/yuta-ushijima/raisetech-live8-sample-app.git
+    dest: "{{ sample_app_dir }}"
+    force: yes
+  register: git_clone
+
+- name: change owner /var/www/raisetech-live8-sample-app
+  become_user: root
+  file:
+    path: "{{ sample_app_dir }}"
+    state: directory
+    owner: ec2-user
+    recurse: yes
+  when: git_clone.changed
+
+- name: create database.yml
+  become_user: root
+  template:
+    src: database.yml.j2
+    dest: "{{ sample_app_dir }}/config/database.yml"
+
+- name: create storage.yml
+  become_user: root
+  template:
+    src: storage.yml.j2
+    dest: "{{ sample_app_dir }}/config/storage.yml"
+
+- name: edit development.rb
+  become_user: root
+  template:
+    src: development.rb.j2
+    dest: "{{ sample_app_dir }}/config/environments/development.rb"
+
+###- name: Copy nginx app configuration file
+###  become_user: root
+###  template:
+###    src: puma.conf.j2
+###    dest: /etc/nginx/conf.d/puma.conf
+
+- name: Copy nginx general configuration file
+  become_user: root
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+
+- name: Copy puma.service configuration
+  become_user: root
+  template:
+    src: puma.service.sample.j2
+    dest: /etc/systemd/system/puma.service
+
+- name: Copy storage.yml configuration
+  become_user: root
+  template:
+    src: storage.yml.j2
+    dest: "{{ sample_app_dir }}/config/storage.yml"
+
+- name: Copy application.rb for Rails
+  become_user: root
+  template:
+    src: application.rb.j2
+    dest: "{{ sample_app_dir }}/config/application.rb"
+

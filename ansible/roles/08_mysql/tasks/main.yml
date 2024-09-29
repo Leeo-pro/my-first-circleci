@@ -1,0 +1,41 @@
+# rpmのインストールを追加
+- name: yum update all package
+  become: true
+  ansible.builtin.yum:
+    name: "*"
+    state: latest
+
+
+- name: uninstall MariaDB
+  become: true
+  yum:
+    name: mariadb*
+    state: absent
+
+
+- name: Check if GPG key is already installed
+  stat:
+    path: /etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
+  register: gpg_key_check
+
+- name: Install MySQL GPG key if not present
+  get_url:
+    url: http://repo.mysql.com/RPM-GPG-KEY-mysql
+    dest: /etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
+  when: not gpg_key_check.stat.exists
+
+
+
+# Run setup script
+- name: Run setup script
+  shell: |
+    bash -lc "bin/setup"
+  args:
+    chdir: "{{ sample_app_dir }}"
+
+# Precompile assets
+- name: Precompile assets
+  shell: |
+    bash -lc "rails assets:precompile"
+  args:
+    chdir: "{{ sample_app_dir }}"
