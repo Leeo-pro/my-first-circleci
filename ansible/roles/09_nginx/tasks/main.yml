@@ -30,6 +30,13 @@
   debug:
     msg: "{{ nginx_install }}"
 
+- name: Update directory path in puma.rb
+  become: true
+  lineinfile:
+    path: "{{ sample_app_dir }}/config/puma.rb"
+    insertafter: '^# directory "/var/www/raisetech-live8-sample-app"$'
+    line: ' directory "/var/www/raisetech-live8-sample-app"'
+    create: true
 
 - name: Start and enable nginx
   become: true

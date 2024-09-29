@@ -34,11 +34,11 @@
     src: development.rb.j2
     dest: "{{ sample_app_dir }}/config/environments/development.rb"
 
-- name: Copy nginx app configuration file
-  become_user: root
-  template:
-    src: puma.conf.j2
-    dest: /etc/nginx/conf.d/puma.conf
+###- name: Copy nginx app configuration file
+###  become_user: root
+###  template:
+###    src: puma.conf.j2
+###    dest: /etc/nginx/conf.d/puma.conf
 
 - name: Copy nginx general configuration file
   become_user: root
