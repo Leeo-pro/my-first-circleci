@@ -31,9 +31,9 @@
 - name: "insert or replace directory path"
   become_user: root
   lineinfile:
-    path: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
+    path: /var/www/rails/raisetech-live8-sample-app/config/puma.rb
     insertafter: '^# directory "/var/www/rails/raisetech-live8-sample-app"$'
-    line: ' directory "/home/ec2-user/raisetech-live8-sample-app"'
+    line: ' directory "/var/www/rails/raisetech-live8-sample-app"'
     create: true
 
 - name: edit development.rb
